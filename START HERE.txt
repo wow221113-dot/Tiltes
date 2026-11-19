@@ -1,0 +1,65 @@
+START HERE: TILT, ONLINE ACCOUNTS, ADMIN, AND AN EXE FROM GITHUB
+=================================================================
+Your Firebase address and key are already filled in (config.js).
+Follow the parts in order. Do not skip.
+
+PART 1: FIREBASE (the online database)
+  1. console.firebase.google.com > open your project "Tilt".
+  2. Build > Authentication > (Get started) > Sign-in method > Email/Password >
+     switch ON "Enable" > Save.
+  3. Build > Realtime Database > Rules tab > Ctrl+A, Delete >
+     open database.rules.json in Notepad > Ctrl+A, Ctrl+C > paste into Firebase > Publish.
+  4. Check: open https://tilt-690a2-default-rtdb.firebaseio.com/tilt.json
+     It must say "Permission denied".
+
+PART 2: GITHUB (store the files)
+  5. github.com > Sign up (free) > verify your email.
+  6. Click + (top right) > New repository > name: tilt > Public > Create repository.
+  7. Windows: open this folder, View > Show > Hidden items (so you can see .github).
+  8. On the empty repository page click "uploading an existing file".
+     In this folder press Ctrl+A and drag EVERYTHING onto the GitHub page.
+     Wait for the list to finish. Check that you see: index.html, config.js, main.js,
+     package.json, database.rules.json, build, scripts, .github, workflow-copies.
+     Click "Commit changes".
+     If .github did NOT upload: on the repository page click Add file > Create new file,
+     type  .github/workflows/build.yml  as the name (typing the slashes makes folders),
+     paste the text from workflow-copies/build.yml.txt, click Commit changes.
+
+PART 3: MAKE THE EXE
+  9. Click the "Actions" tab. If you see a green button "I understand my workflows,
+     go ahead and enable them", click it.
+ 10. Click "Build Tilt" (left side) > "Run workflow" (right) > green "Run workflow".
+ 11. Wait about 5 to 10 minutes until the run shows a green check.
+ 12. Click the run > scroll to "Artifacts" > click "Tilt-Windows". A zip downloads.
+ 13. Unzip it. Double-click Tilt-Setup-1.0.0.exe.
+     Windows may say "Windows protected your PC": click More info > Run anyway.
+     (It says this because the app is not paid-signed. It is your own app.)
+ 14. Tilt installs and puts the Tilt icon on your Desktop and Start menu.
+
+PART 4: YOUR ADMIN ACCOUNT
+ 15. Open Tilt > Create account > Sign up with wow22113@gmail.com, a username, a password.
+ 16. Open that inbox, find the email from Firebase (check Spam), click the link.
+ 17. In Tilt: Settings > Email verification > "I verified".
+ 18. A shield button appears at the top. That is the admin panel:
+       Users tab: all accounts, Ban / Unban, set followers.
+       Announce tab: message everyone (banner + bell).
+       Shield on a post or clip: set likes, views, comments, or "Make it pop".
+       Shield on a profile: set followers.
+
+PART 5: FRIENDS
+ 19. Send friends the installer. They Sign up with their own email.
+     Search > People > Follow, then message from the Inbox.
+
+PART 6: AUTO-UPDATES (so installed apps update by themselves)
+ 20. In the repository open package.json > pencil icon > change "version": "1.0.0"
+     to 1.0.1 > Commit changes.
+ 21. Releases (right side) > Draft a new release > Choose a tag > type v1.0.1 >
+     Create new tag > Publish release.
+ 22. Actions builds it and attaches Tilt-Setup-1.0.1.exe to that release.
+     Anyone with Tilt installed gets the update next time they open it.
+ To change the app: give me your request, I send a new index.html, you upload it
+ (Add file > Upload files, same name replaces the old one), then do steps 20 to 22.
+
+OPTIONAL: WEB VERSION
+ Settings > Pages > Source: GitHub Actions. Then Actions > Publish web version >
+ Run workflow. Your site: https://YOURNAME.github.io/tilt/
