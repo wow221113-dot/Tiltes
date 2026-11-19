@@ -1,13 +1,16 @@
-TILT UPDATE 1.0.1  (new icon, keyboard shortcuts, online dot, window size memory)
+TILT UPDATE 1.0.2  (email verification removed)
 
-1. Unzip this folder.
-2. github.com > your "tilt" repository > Add file > Upload files.
-3. Open this folder, press Ctrl+A, drag everything onto the GitHub page
-   (index.html, main.js, package.json and the build folder with the two icons).
-   Same names replace the old files. Click Commit changes.
-4. Releases (right side) > Draft a new release > Choose a tag > type v1.0.1 >
-   Create new tag > Publish release.
-5. Actions tab: wait for "Build Tilt" to turn green (about 10 minutes).
-6. Releases > v1.0.1 now has Tilt-Setup-1.0.1.exe.
-   Installed Tilt apps update themselves next time they open.
-   Or download and run the new exe yourself to see the new desktop icon right away.
+STEP 1: FIREBASE (do this first, it is required)
+  Firebase console > your Tilt project > Build > Realtime Database > Rules tab.
+  Ctrl+A, Delete. Open database.rules.json (in this folder) in Notepad, Ctrl+A, Ctrl+C,
+  paste into Firebase, click Publish.
+
+STEP 2: GITHUB
+  github.com > your tilt repository > Add file > Upload files.
+  Drag in index.html, package.json and database.rules.json from this folder.
+  Click Commit changes.
+
+STEP 3: RELEASE
+  Releases > Draft a new release > Choose a tag > type v1.0.2 > Create new tag > Publish release.
+  Wait for Actions > Build Tilt to turn green (about 10 minutes).
+  Releases > v1.0.2 has Tilt-Setup-1.0.2.exe. Installed apps update themselves on next open.

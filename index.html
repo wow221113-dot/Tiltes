@@ -507,7 +507,7 @@ $('#sInvite').onclick=()=>{if(!hasClaude()){const u=store.get('tilt_server','');
 
 const CFG=(window.TILT_CONFIG&&window.TILT_CONFIG.apiKey&&!/YOUR_/.test(window.TILT_CONFIG.apiKey+window.TILT_CONFIG.dbUrl))?window.TILT_CONFIG:null;
 const FB={tok:null,rt:null,uid:null,email:'',verified:false,t:0,b:0},IDT='https://identitytoolkit.googleapis.com/v1/accounts',ADMIN_EMAIL=((CFG&&CFG.admin)||'').toLowerCase();
-const isAdmin=()=>!!(CFG&&FB.verified&&FB.email&&FB.email===ADMIN_EMAIL);
+const isAdmin=()=>!!(CFG&&FB.email&&FB.email===ADMIN_EMAIL);
 async function fbPost(url,body){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}),j=await r.json();if(!r.ok)throw new Error((j.error&&j.error.message)||'Request failed');return j}
 async function fbLookup(){const j=await fbPost(IDT+':lookup?key='+CFG.apiKey,{idToken:FB.tok}),u=(j.users||[])[0]||{};FB.verified=!!u.emailVerified;FB.email=(u.email||FB.email||'').toLowerCase();return u}
 async function fbSign(m,email,pw){const j=await fbPost(IDT+':'+(m==='signup'?'signUp':'signInWithPassword')+'?key='+CFG.apiKey,{email,password:pw,returnSecureToken:true});FB.tok=j.idToken;FB.rt=j.refreshToken;FB.uid=j.localId;FB.email=email;store.set('tilt_fbrt',FB.rt);await fbLookup()}
@@ -530,9 +530,8 @@ if(CFG){$('#submit').onclick=async()=>{
  try{const b=await fbGet('bans/'+FB.uid);if(b){FB.tok=null;FB.uid=null;return err.textContent='This account has been banned.'}}catch(e){}
  const users=store.get('tilt_users',{});
  if(mode==='signup'||!users[email]){let pr=null;try{pr=await fbGet('profiles/'+FB.uid)}catch(e){}const nm=name||(pr&&pr.n)||email.split('@')[0];users[email]={name:nm,h:'fb'};store.set('tilt_users',users);if(!store.get('tilt_u_'+email,null)){const st=defState(nm);if(pr){st.profile.bio=pr.b||'';st.profile.avatar=pr.av||''}store.set('tilt_u_'+email,st)}}
- if(mode==='signup')fbPost(IDT+':sendOobCode?key='+CFG.apiKey,{requestType:'VERIFY_EMAIL',idToken:FB.tok}).then(()=>toast('Verification email sent. Check your inbox.')).catch(()=>{});
  err.textContent='';user={email};store.set('tilt_session',user);enter()}}
-function setVerSt(){if(!CFG)return;$('#verRow').classList.remove('hide');$('#verSt').textContent=FB.verified?'Verified':'Not verified yet. Check your inbox.';$('#verBtn').classList.toggle('hide',FB.verified);$('#verChk').classList.toggle('hide',FB.verified)}
+function setVerSt(){if(CFG)$('#verRow').classList.add('hide')}
 $('#verBtn').onclick=()=>fbPost(IDT+':sendOobCode?key='+CFG.apiKey,{requestType:'VERIFY_EMAIL',idToken:FB.tok}).then(()=>toast('Verification email sent')).catch(()=>toast('Could not send the email'));
 $('#verChk').onclick=()=>fbRefresh().then(fbLookup).then(()=>{setVerSt();setAdminUI();goOffline();goOnline();render();toast(FB.verified?'Email verified':'Not verified yet')}).catch(()=>toast('Could not check. Try again.'));
 function setAdminUI(){$('#admBtn').classList.toggle('hide',!isAdmin())}
@@ -583,8 +582,8 @@ function openUserSet(uid){if(!isAdmin())return;const key=String(uid).replace(/^o
 $('#sSave').onclick=async()=>{if(!setCtx||!isAdmin())return;const v={};setCtx.fields.forEach(f=>v[f.k]=num($('#sf_'+f.k).value));try{await setCtx.onSave(v);toast('Saved');$('#dSet').close()}catch(e){toast('Could not save. Check the database rules.')}};
 $('#sBoost').onclick=async()=>{try{await setCtx.onBoost();toast('Boosted');$('#dSet').close()}catch(e){toast('Could not save.')}};
 $('#sReset').onclick=async()=>{try{await setCtx.onReset();toast('Reset');$('#dSet').close()}catch(e){toast('Could not reset.')}};
-const VER='1.0.1';
-function whatsNew(){if(store.get('tilt_ver','')===VER)return;store.set('tilt_ver',VER);setTimeout(()=>toast('Tilt '+VER+': new icon and keyboard shortcuts (1 to 6, and / for search)'),2500)}
+const VER='1.0.2';
+function whatsNew(){if(store.get('tilt_ver','')===VER)return;store.set('tilt_ver',VER);setTimeout(()=>toast('Tilt '+VER+': email verification removed, sign-in is simpler'),2500)}
 document.addEventListener('keydown',e=>{if(!S||e.ctrlKey||e.metaKey||e.altKey)return;const t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;if(document.querySelector('dialog[open]'))return;const m={'1':'pHome','2':'pSearch','3':'pBlips','4':'pGames','5':'pMsg','6':'pMe'}[e.key];if(m){go(m);return}if(e.key==='/'){e.preventDefault();go('pSearch');$('#q').focus()}});
 /* search */
 $('#sChips').onclick=e=>{const b=e.target.closest('button');if(!b)return;sM=b.dataset.m;$$('#sChips button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderSearch()};

@@ -3,15 +3,15 @@
     "tilt": {
       "profiles": {
         ".read": "auth != null",
-        "$uid": { ".write": "(auth != null && auth.uid == $uid && !root.child('tilt/bans/'+auth.uid).exists()) || (auth != null && auth.token.email == 'wow22113@gmail.com' && auth.token.email_verified == true)" }
+        "$uid": { ".write": "(auth != null && auth.uid == $uid && !root.child('tilt/bans/'+auth.uid).exists()) || (auth != null && auth.token.email == 'wow22113@gmail.com')" }
       },
       "follows": {
         ".read": "auth != null",
-        "$uid": { ".write": "(auth != null && auth.uid == $uid && !root.child('tilt/bans/'+auth.uid).exists()) || (auth != null && auth.token.email == 'wow22113@gmail.com' && auth.token.email_verified == true)" }
+        "$uid": { ".write": "(auth != null && auth.uid == $uid && !root.child('tilt/bans/'+auth.uid).exists()) || (auth != null && auth.token.email == 'wow22113@gmail.com')" }
       },
       "posts": {
         ".read": "auth != null",
-        "$uid": { ".write": "(auth != null && auth.uid == $uid && !root.child('tilt/bans/'+auth.uid).exists()) || (auth != null && auth.token.email == 'wow22113@gmail.com' && auth.token.email_verified == true)" }
+        "$uid": { ".write": "(auth != null && auth.uid == $uid && !root.child('tilt/bans/'+auth.uid).exists()) || (auth != null && auth.token.email == 'wow22113@gmail.com')" }
       },
       "dms": {
         "$sid": {
@@ -21,26 +21,26 @@
         }
       },
       "users": {
-        ".read": "auth != null && auth.token.email == 'wow22113@gmail.com' && auth.token.email_verified == true",
+        ".read": "auth != null && auth.token.email == 'wow22113@gmail.com'",
         "$uid": {
           ".read": "auth != null && auth.uid == $uid",
-          ".write": "(auth != null && auth.uid == $uid && !root.child('tilt/bans/'+auth.uid).exists()) || (auth != null && auth.token.email == 'wow22113@gmail.com' && auth.token.email_verified == true)"
+          ".write": "(auth != null && auth.uid == $uid && !root.child('tilt/bans/'+auth.uid).exists()) || (auth != null && auth.token.email == 'wow22113@gmail.com')"
         }
       },
       "bans": {
-        ".read": "auth != null && auth.token.email == 'wow22113@gmail.com' && auth.token.email_verified == true",
+        ".read": "auth != null && auth.token.email == 'wow22113@gmail.com'",
         "$uid": {
           ".read": "auth != null && auth.uid == $uid",
-          ".write": "auth != null && auth.token.email == 'wow22113@gmail.com' && auth.token.email_verified == true"
+          ".write": "auth != null && auth.token.email == 'wow22113@gmail.com'"
         }
       },
       "ov": {
         ".read": "auth != null",
-        ".write": "auth != null && auth.token.email == 'wow22113@gmail.com' && auth.token.email_verified == true"
+        ".write": "auth != null && auth.token.email == 'wow22113@gmail.com'"
       },
       "announce": {
         ".read": "auth != null",
-        ".write": "auth != null && auth.token.email == 'wow22113@gmail.com' && auth.token.email_verified == true"
+        ".write": "auth != null && auth.token.email == 'wow22113@gmail.com'"
       }
     }
   }
