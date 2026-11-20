@@ -1,9 +1,10 @@
-TILT UPDATE 1.0.3  (shows the real error + a connection check)
+TILT UPDATE 1.0.4  (3 new games, leaderboard, admin tools, edit posts, @mentions, badges)
+
+No Firebase changes needed this time.
 
 1. github.com > your tilt repository > Add file > Upload files.
    Drag in index.html and package.json from this folder. Click Commit changes.
-2. Releases > Draft a new release > Choose a tag > type v1.0.3 > Create new tag > Publish release.
+2. Releases > Draft a new release > Choose a tag > type v1.0.4 > Create new tag > Publish release.
 3. Actions tab: wait for "Build Tilt" to turn green (about 10 minutes).
-4. Releases > v1.0.3 > download Tilt-Setup-1.0.3.exe and run it.
-5. Open Tilt, log in as admin, tap the shield, press "Run connection check".
-   A box lists what passed and what failed. Send me a screenshot of it.
+4. Releases > v1.0.4 > download Tilt-Setup-1.0.4.exe and run it
+   (or just reopen your installed Tilt, it updates itself).
