@@ -3,21 +3,31 @@
     "tilt": {
       "profiles": {
         ".read": "auth != null",
-        "$uid": { ".write": "(auth != null && auth.uid == $uid && !root.child('tilt/bans/'+auth.uid).exists()) || (auth != null && auth.token.email == 'wow22113@gmail.com')" }
+        "$uid": {
+          ".write": "(auth != null && auth.uid == $uid && !root.child('tilt/bans/'+auth.uid).exists()) || (auth != null && auth.token.email == 'wow22113@gmail.com')"
+        }
       },
       "follows": {
         ".read": "auth != null",
-        "$uid": { ".write": "(auth != null && auth.uid == $uid && !root.child('tilt/bans/'+auth.uid).exists()) || (auth != null && auth.token.email == 'wow22113@gmail.com')" }
+        "$uid": {
+          ".write": "(auth != null && auth.uid == $uid && !root.child('tilt/bans/'+auth.uid).exists()) || (auth != null && auth.token.email == 'wow22113@gmail.com')"
+        }
       },
       "posts": {
         ".read": "auth != null",
-        "$uid": { ".write": "(auth != null && auth.uid == $uid && !root.child('tilt/bans/'+auth.uid).exists()) || (auth != null && auth.token.email == 'wow22113@gmail.com')" }
+        "$uid": {
+          ".write": "(auth != null && auth.uid == $uid && !root.child('tilt/bans/'+auth.uid).exists()) || (auth != null && auth.token.email == 'wow22113@gmail.com')"
+        }
       },
       "dms": {
         "$sid": {
           ".read": "auth != null && auth.uid == $sid",
           ".write": "auth != null && auth.uid == $sid && !root.child('tilt/bans/'+auth.uid).exists()",
-          "to": { "$rid": { ".read": "auth != null && auth.uid == $rid" } }
+          "to": {
+            "$rid": {
+              ".read": "auth != null && auth.uid == $rid"
+            }
+          }
         }
       },
       "users": {
@@ -41,6 +51,12 @@
       "announce": {
         ".read": "auth != null",
         ".write": "auth != null && auth.token.email == 'wow22113@gmail.com'"
+      },
+      "media": {
+        "$uid": {
+          ".read": "auth != null",
+          ".write": "(auth != null && auth.uid == $uid && !root.child('tilt/bans/'+auth.uid).exists()) || (auth != null && auth.token.email == 'wow22113@gmail.com')"
+        }
       }
     }
   }

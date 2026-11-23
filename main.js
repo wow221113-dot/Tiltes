@@ -1,9 +1,25 @@
-const { app, BrowserWindow, Menu, shell } = require('electron');
+const { app, BrowserWindow, Menu, shell, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
 
 if (!app.requestSingleInstanceLock()) app.quit();
+
+let mainWin = null;
+let userAsked = false;
+const send = (s) => { try { if (mainWin) mainWin.webContents.send('tilt-update-status', s); } catch (e) {} };
+
+ipcMain.on('tilt-version', (e) => { e.returnValue = app.getVersion(); });
+ipcMain.on('tilt-update', () => {
+  if (!app.isPackaged) { send('dev'); return; }
+  userAsked = true;
+  send('checking');
+  autoUpdater.checkForUpdates().catch(() => { send('error'); userAsked = false; });
+});
+autoUpdater.on('update-available', () => { if (userAsked) send('downloading'); });
+autoUpdater.on('update-not-available', () => { if (userAsked) send('none'); userAsked = false; });
+autoUpdater.on('update-downloaded', () => { if (userAsked) autoUpdater.quitAndInstall(); });
+autoUpdater.on('error', () => { if (userAsked) send('error'); userAsked = false; });
 
 const stateFile = () => path.join(app.getPath('userData'), 'window.json');
 function loadSize() {
@@ -22,12 +38,14 @@ function createWindow() {
     backgroundColor: '#0E0A26',
     autoHideMenuBar: true,
     show: false,
-    webPreferences: { contextIsolation: true }
+    webPreferences: { contextIsolation: true, preload: path.join(__dirname, 'preload.js'), autoplayPolicy: 'no-user-gesture-required' }
   });
+  mainWin = win;
   win.once('ready-to-show', () => win.show());
   win.on('close', () => {
     try { const b = win.getBounds(); fs.writeFileSync(stateFile(), JSON.stringify({ width: b.width, height: b.height })); } catch (e) {}
   });
+  win.on('closed', () => { mainWin = null; });
   win.loadFile('index.html');
   win.webContents.setWindowOpenHandler(({ url }) => { shell.openExternal(url); return { action: 'deny' }; });
 }

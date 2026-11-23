@@ -1,10 +1,19 @@
-TILT UPDATE 1.0.4  (3 new games, leaderboard, admin tools, edit posts, @mentions, badges)
+TILT UPDATE 1.0.7  (everyone can see each other's clips and photo blips)
 
-No Firebase changes needed this time.
+STEP 1: FIREBASE RULES (required, do this first)
+  Firebase console > Build > Realtime Database > Rules tab.
+  Ctrl+A, Delete. Open database.rules.json (this folder) in Notepad, Ctrl+A, Ctrl+C,
+  paste into Firebase, click Publish.
+  Direct link: https://console.firebase.google.com/project/tilt-690a2/database/tilt-690a2-default-rtdb/rules
 
-1. github.com > your tilt repository > Add file > Upload files.
-   Drag in index.html and package.json from this folder. Click Commit changes.
-2. Releases > Draft a new release > Choose a tag > type v1.0.4 > Create new tag > Publish release.
-3. Actions tab: wait for "Build Tilt" to turn green (about 10 minutes).
-4. Releases > v1.0.4 > download Tilt-Setup-1.0.4.exe and run it
-   (or just reopen your installed Tilt, it updates itself).
+STEP 2: GITHUB
+  github.com > your tilt repository > Add file > Upload files.
+  Drag in index.html, main.js, package.json, database.rules.json. Click Commit changes.
+
+STEP 3: RELEASE
+  Releases > Draft a new release > Choose a tag > type v1.0.7 > Create new tag > Publish release.
+  Wait for Actions > Build Tilt to turn green (about 10 minutes).
+  Releases > v1.0.7 > Tilt-Setup-1.0.7.exe  (or reopen Tilt to self-update).
+
+STEP 4: TELL EVERYONE
+  Admin shield > Announce > "Announce update to v1.0.7".
