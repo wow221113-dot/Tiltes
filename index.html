@@ -92,6 +92,8 @@ dialog{border:0;border-radius:24px;padding:1.3rem;width:min(26rem,94vw);backgrou
 .vb{display:inline-grid;place-items:center;width:1.05rem;height:1.05rem;border-radius:50%;background:#3b9cff;color:#fff;font-size:.7rem;margin-left:.2rem;vertical-align:middle}
 #updBar{display:flex;align-items:center;gap:.6rem;background:#2b6cff;color:#fff;padding:.5rem 1rem;font-weight:600;flex-wrap:wrap}#updBar .btn{background:#fff;color:#2b6cff}#updBar .ib{background:rgba(255,255,255,.25);width:2rem;height:2rem;color:#fff;margin-left:auto}
 #rkWrap{position:fixed;inset:0;z-index:50;background:#0E0A26;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}#rkBar{display:flex;align-items:center;gap:.8rem;padding:.5rem .8rem;background:var(--surface);color:var(--ink);border-bottom:1px solid var(--line)}#rkFrame{flex:1;border:0;width:100%;background:#fff}
+.clip svg{will-change:transform}.th{content-visibility:auto;contain-intrinsic-size:auto 12rem}
+.ggrid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}.gt{display:flex;flex-direction:column;gap:.15rem;padding:.9rem;text-align:left;color:inherit;border-radius:20px;position:relative}.gt .ic{font-size:2.1rem;line-height:1.1}.gt small{color:var(--mute)}.gt .nw{position:absolute;top:.6rem;right:.6rem;background:var(--pink);color:#fff;border-radius:99px;font-size:.65rem;font-weight:800;padding:.1rem .45rem}.bdg{width:2.5rem;height:2.5rem;border-radius:50%;display:grid;place-items:center;background:var(--line);font-size:1.25rem}.bdg.off{filter:grayscale(1);opacity:.35}.xp{height:.5rem;border-radius:99px;background:var(--line);overflow:hidden;margin:.4rem 0}.xp i{display:block;height:100%;background:linear-gradient(90deg,var(--pink),var(--sky))}.dly{padding:1rem;margin:.8rem 0;display:flex;gap:.8rem;align-items:center}
 </style>
 </head>
 <body>
@@ -138,8 +140,15 @@ dialog{border:0;border-radius:24px;padding:1.3rem;width:min(26rem,94vw);backgrou
       <div class="chips" id="bChips"><button data-f="all" aria-pressed="true">For you</button><button data-f="top" aria-pressed="false">Top</button><button data-f="fol" aria-pressed="false">Following</button></div>
       <div id="tl"></div>
     </div>
-    <div id="pGames" class="page hide"><h2 style="margin-bottom:.8rem">Games</h2><div id="glist"></div><div id="gameArea" class="glass hide" style="padding:1rem;margin-top:.5rem"></div>
-      <div id="gFoot" class="row hide" style="margin-top:.8rem;justify-content:flex-start"><button class="btn sm ghost" id="shareBest">📣 Share my best</button><button class="btn sm ghost" id="lbBtn">🏆 Leaderboard</button></div></div>
+    <div id="pGames" class="page hide">
+      <div id="gHub"></div>
+      <div id="gPlay" class="hide">
+        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem"><button class="btn sm ghost" id="gBack">← All games</button><b id="gTitle" style="flex:1;font-size:1.1rem"></b></div>
+        <p id="gHelp" style="color:var(--mute);margin:0 0 .6rem;font-size:.9rem"></p>
+        <div id="gameArea" class="glass hide" style="padding:1rem"></div>
+        <div id="gFoot" class="row hide" style="margin-top:.8rem;justify-content:flex-start"><button class="btn sm ghost" id="shareBest">📣 Share my best</button><button class="btn sm ghost" id="lbBtn">🏆 Leaderboard</button></div>
+      </div>
+    </div>
     <div id="pMsg" class="page hide">
       <div id="inbox"><h2 style="margin-bottom:.8rem">Messages</h2><div id="clist"></div></div>
       <div id="thread" class="hide"><div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem"><button class="ib" id="tBack" aria-label="Back">←</button><div id="tHead" style="flex:1"></div></div>
@@ -209,7 +218,7 @@ const NOW=Date.now(),ago=t=>{const m=Math.max(1,(Date.now()-t)/6e4|0);return m<6
 const ICON='<svg viewBox="0 0 64 64"><defs><linearGradient id="ig" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF5C8A"/><stop offset=".58" stop-color="#8C46FF"/><stop offset="1" stop-color="#40AAFF"/></linearGradient><linearGradient id="ip" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF5C8A"/><stop offset="1" stop-color="#8C46FF"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#ig)"/><g transform="rotate(-8 32 32)"><path d="M13 17h38a5.5 5.5 0 0 1 5.5 5.5v17A5.5 5.5 0 0 1 51 45H34l-10 9v-9H13a5.5 5.5 0 0 1-5.5-5.5v-17A5.5 5.5 0 0 1 13 17z" fill="#fff"/><path d="M27.5 24.5l12 7.5-12 7.5z" fill="url(#ip)" stroke="url(#ip)" stroke-width="2" stroke-linejoin="round"/></g></svg>';
 const fillIcons=()=>$$('.appicon').forEach(e=>e.innerHTML=ICON);
 let mode='login',user=null,S=null,tmpA=null,tmpB=null,bImg='',cmId=null,gTimer=null,curT=null,curClip=null,curProf=null,pT='blips',hF='all',bF='all',sM='all';
-const save=()=>store.set('tilt_u_'+user.email,S);
+const save=()=>{_ac=null;store.set('tilt_u_'+user.email,S)};
 const defState=n=>({profile:{name:n,bio:'',avatar:'',banner:''},posts:[],likes:{},saved:{},comments:{},follows:{},set:{theme:'system',notif:true,priv:false,lists:false,hideLists:false,demo:true}});
 
 /* intro */
@@ -267,7 +276,7 @@ function ent(id){if(user&&id===user.email&&S)return{id,h:S.profile.name,c:'#FF5C
  if(SEED_P[id])return{id,...SEED_P[id],img:avaImg(id),banner:bannerImg(id)};const u=store.get('tilt_users',{})[id];if(!u)return null;const pr=(store.get('tilt_u_'+id,null)||{}).profile||{};
  return{id,h:pr.name||u.name,c:'#7A3CFF',img:pr.avatar||'',banner:pr.banner||'',bio:pr.bio||''}}
 const people=()=>[...Object.keys(SEED_P),...Object.keys(store.get('tilt_users',{})).filter(e=>e!==user.email),...Object.keys(ONL.profiles)].map(ent).filter(Boolean);
-function ALL(){const us=Object.keys(store.get('tilt_users',{})).filter(e=>e!==user.email);
+function ALL0(){const us=Object.keys(store.get('tilt_users',{})).filter(e=>e!==user.email);
  const others=us.flatMap(e=>{const st=store.get('tilt_u_'+e,null);return st&&(!(st.set&&st.set.priv)||S.follows[e])?(st.posts||[]).map(p=>({...p,by:e})):[]});
  return[...S.posts.map(p=>({...p,by:user.email})),...others,...ONL.posts,...genPosts().filter(p=>p.ts<=Date.now()),...SEED].filter(p=>!((ONL.ov||{}).hidden||{})[p.id]||isAdmin())}
 const av=(c,t,img,cls='')=>img?`<img class="av ${cls}" src="${img}" alt="">`:`<span class="av ${cls}" style="background:${c}">${esc((t||'?')[0].toUpperCase())}</span>`;
@@ -275,16 +284,16 @@ const likes0=p=>(p.k==='clip'?Math.floor(aiViews(p)*(.03+.07*qual(p))):(p.l||0)+
 const fol=id=>!!S.follows[id],fbtn=(u)=>u.id===user.email?'':`<button class="btn sm ${fol(u.id)?'ghost':'pink'} follow" data-a="fol" data-u="${enc(u.id)}">${fol(u.id)?'Following':'Follow'}</button>`;
 const who=(u,ts)=>`<button class="lnk" data-a="user" data-u="${enc(u.id)}">${av(u.c,u.h,u.img)}<span>@${esc(u.h)}${badgeOf(u.id)}${ts?` <small>· ${ago(ts)}</small>`:''}</span></button>`;
 function clipHTML(p){const u=ent(p.by),on=S.likes[p.id];
- const own=p.by===user.email;return `<article class="clip" data-cid="${p.id}">${p.om?omEl(p,1,'mv'):(p.media||p.vid)?mediaEl(p,1):scene(p.n)}${(p.media||p.vid||p.om)?'':`<div class="pg"><i style="animation-duration:${dur(p)}s"></i></div>`}<div class="meta">${who(u)}<h3>${esc(p.t)}</h3>${shareTag(p,own)}<small>👁 <span data-vw="${p.id}">${fmt(views(p))}</span> views${p.vid||p.om||p.mt==='image'?'':` · 0:${String(dur(p)).padStart(2,'0')}`}</small></div>
+ const own=p.by===user.email;return `<article class="clip" data-cid="${p.id}">${p.om?omEl(p,1,'mv'):(p.media||p.vid)?mediaEl(p,1):scene(p.n,0)}${(p.media||p.vid||p.om)?'':`<div class="pg"><i style="animation-duration:${dur(p)}s"></i></div>`}<div class="meta">${who(u)}<h3>${esc(p.t)}</h3>${shareTag(p,own)}<small>👁 <span data-vw="${p.id}">${fmt(views(p))}</span> views${p.vid||p.om||p.mt==='image'?'':` · 0:${String(dur(p)).padStart(2,'0')}`}</small></div>
  <div class="rail" data-id="${p.id}"><button data-a="like" class="${on?'on':''}" aria-label="Like">♥</button><small data-lk="${p.id}">${likes(p)}</small><button data-a="cm" aria-label="Comments">💬</button><small data-cc="${p.id}">${ccount(p)}</small><button data-a="rep" class="${(S.rp||{})[p.id]?'on':''}" aria-label="Repost">🔁</button><button data-a="save" class="${S.saved[p.id]?'on':''}" aria-label="Save">${S.saved[p.id]?'★':'☆'}</button><button data-a="play" aria-label="Play a game">🎮</button><button data-a="sh" aria-label="Share">↗</button>${p.mt==='video'?'<button data-a="mute" aria-label="Sound">🔇</button>':''}${own?'<button data-a="del" aria-label="Delete clip">🗑</button>':''}${isAdmin()?'<button data-a="admp" aria-label="Admin">🛡</button>':''}</div></article>`}
 function blipHTML(p){const u=ent(p.by);if(!u)return'';const own=p.by===user.email;
  const pic=p.om?`<div class="pic">${omEl(p,0,'')}</div>`:p.img?`<div class="pic"><img src="${p.img}" alt="Photo"></div>`:p.pic?`<div class="pic">${scene(p.n)}</div>`:'';
  return `<article class="blip glass" data-cid="${p.id}">${(S.rp||{})[p.id]?'<small style="color:var(--mute)">🔁 You reposted</small>':''}<div class="who">${who(u,p.ts)}${own?'':fbtn(u)}</div><p>${tags(esc(p.t))}${p.edited?' <small style="color:var(--mute)">(edited)</small>':''}</p>${pic}${p.poll?pollHTML(p):''}<div class="acts" data-id="${p.id}"><button data-a="like" class="${S.likes[p.id]?'on':''}">♥ <span data-lk="${p.id}">${likes(p)}</span></button><button data-a="cm">💬 <span data-cc="${p.id}">${ccount(p)}</span></button><button data-a="rep" class="${(S.rp||{})[p.id]?'on':''}">🔁 <span>${repc(p)}</span></button><button data-a="save" class="${S.saved[p.id]?'on':''}">${S.saved[p.id]?'★ Saved':'☆ Save'}</button><button data-a="sh">Share</button>${own?'<button data-a="edit">Edit</button><button data-a="del">Delete</button>':''}${isAdmin()?'<button data-a="admp">🛡</button>':''}<span class="vw">👁 <span data-vw="${p.id}">${fmt(views(p))}</span></span></div></article>`}
 const visible=id=>!$(id).classList.contains('hide');
-function render(){badge();lastRender=Date.now();hidePill();
- const cl=ALL().filter(p=>p.k==='clip'&&(hF!=='fol'||fol(p.by)||p.by===user.email)).sort((a,b)=>hF==='top'?views(b)-views(a):b.ts-a.ts).slice(0,LC);
+function render(){_ac=null;badge();lastRender=Date.now();hidePill();
+ const cl=ALL().filter(p=>p.k==='clip'&&(hF!=='fol'||fol(p.by)||p.by===user.email)).sort(sortBy(hF,'top',views,(a,b)=>b.ts-a.ts)).slice(0,LC);
  $('#clips').innerHTML=cl.map(clipHTML).join('')+(cl.length>=LC?'<p style="text-align:center"><button class="btn ghost" data-a="more" data-w="c">Show more clips</button></p>':'')||'<p class="empty">Follow creators from Search to fill this tab.</p>';
- const bl=ALL().filter(p=>p.k==='blip'&&(bF!=='fol'||fol(p.by)||p.by===user.email)).sort((a,b)=>bF==='top'?views(b)-views(a):rk(b)-rk(a)).slice(0,LB);
+ const bl=ALL().filter(p=>p.k==='blip'&&(bF!=='fol'||fol(p.by)||p.by===user.email)).sort(sortBy(bF,'top',views,(a,b)=>rk(b)-rk(a))).slice(0,LB);
  $('#tl').innerHTML=sugg()+bl.map(blipHTML).join('')+(bl.length>=LB?'<p style="text-align:center"><button class="btn ghost" data-a="more" data-w="b">Show more blips</button></p>':'')||'<p class="empty">Nothing here yet.</p>';
  renderMe();if(visible('#pSearch'))renderSearch();if(visible('#pMsg'))renderInbox();
  if($('#dClip').open)openClip(curClip);if($('#dProf').open)openProf(curProf);if($('#dList').open&&curL)openList(curL[0],curL[1])}
@@ -304,7 +313,7 @@ document.addEventListener('click',e=>{
  if(a==='like'){S.likes[id]=!S.likes[id];const pp=ALL().find(p=>p.id===id);if(S.likes[id]&&pp)notify(pp.by,'liked your '+(pp.k==='clip'?'clip':'blip'));save();render()}
  else if(a==='fol'){const was=fol(u);S.follows[u]=!was;if(!was)notify(u,'started following you');pubFollows();if(!was&&SEED_P[u]){const d=store.get('tilt_dm',{}),k=dkey(u);if(!d[k]){d[k]=[{f:u,t:GREET[u],ts:Date.now()}];store.set('tilt_dm',d)}}save();toast(was?'Unfollowed':'Following @'+ent(u).h);render()}
  else if(a==='rep'){S.rp=S.rp||{};const was=!!S.rp[id];if(was)delete S.rp[id];else{S.rp[id]=Date.now();const pp=ALL().find(p=>p.id===id);if(pp)notify(pp.by,'reposted your '+(pp.k==='clip'?'clip':'blip'))}save();toast(was?'Repost removed':'Reposted');render()}
- else if(a==='more'){if(b.dataset.w==='c')LC+=24;else LB+=50;render()}
+ else if(a==='more'){if(b.dataset.w==='s'){SRL+=30;renderSearch();return}if(b.dataset.w==='c')LC+=24;else LB+=50;render()}
  else if(a==='edit'){const pp=S.posts.find(x=>x.id===id);if(pp){editId=id;$('#epT').value=pp.t;$('#dEP').showModal()}}
  else if(a==='shr'){const pp=S.posts.find(x=>x.id===id);if(pp)shareNew(pp)}
  else if(a==='men'){const uu=people().find(x=>x.h.toLowerCase()===String(b.dataset.t).toLowerCase());if(uu)openProf(uu.id);else toast('No user @'+b.dataset.t)}
@@ -392,11 +401,11 @@ function addTags(inp,max){if(!inp.value.trim())return toast('Type something firs
 $('#nTag').onclick=()=>addTags($('#nTitle'),120);$('#tagBtn').onclick=()=>addTags($('#bt'),280);
 function dmBadge(){const d=dms(),rd=store.get('tilt_read_'+user.email,{});let n=0;Object.keys(d).forEach(k=>{const[a,b]=k.split('|'),o=a===user.email?b:b===user.email?a:null;if(!o)return;const l=d[k].slice(-1)[0];if(l&&l.f!==user.email&&l.ts>(rd[o]||0))n++});$('#mbd').textContent=n;$('#mbd').classList.toggle('hide',!n)}
 function markRead(id){const rd=store.get('tilt_read_'+user.email,{});rd[id]=Date.now();store.set('tilt_read_'+user.email,rd);dmBadge()}
-const hh=s=>[...String(s)].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
+const HHC=new Map();const hh=s=>{s=String(s);let v=HHC.get(s);if(v===undefined){let a=7;for(let i=0;i<s.length;i++)a=(a*31+s.charCodeAt(i))>>>0;v=a;if(HHC.size>60000)HHC.clear();HHC.set(s,v)}return v};
 function boost(p){if(!S||!S.set||S.set.demo===false||!p||!user||p.by!==user.email||!p.ts)return{l:0,v:0};const age=Math.max(0,(Date.now()-p.ts)/6e4),h=hh(p.id),l=Math.floor((3+h%5)*Math.log2(1+age/3));return{l,v:l*(7+h%6)+Math.floor(age*2)}}
-const views0=p=>aiViews(p)+Object.keys(store.get('tilt_views',{})[p.id]||{}).length;
+const views0=p=>aiViews(p)+realViews(p.id);
 const fmt=n=>n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':String(n);
-function tick(){if(!S||!user)return;milestones();aiEvents();replyEvents(ALL());followerEvents();const A=ALL();$$('[data-lk]').forEach(e=>{const p=A.find(x=>x.id===e.dataset.lk);if(p)e.textContent=likes(p)});$$('[data-vw]').forEach(e=>{const p=A.find(x=>x.id===e.dataset.vw);if(p)e.textContent=fmt(views(p))});$$('[data-cc]').forEach(e=>{const p=A.find(x=>x.id===e.dataset.cc);if(p)e.textContent=ccount(p)});if(visible('#pMe'))renderMe()}
+function tick(){if(!S||!user)return;_vw=null;milestones();aiEvents();replyEvents(ALL());followerEvents();const A=ALL();$$('[data-lk]').forEach(e=>{const p=A.find(x=>x.id===e.dataset.lk);if(p)e.textContent=likes(p)});$$('[data-vw]').forEach(e=>{const p=A.find(x=>x.id===e.dataset.vw);if(p)e.textContent=fmt(views(p))});$$('[data-cc]').forEach(e=>{const p=A.find(x=>x.id===e.dataset.cc);if(p)e.textContent=ccount(p)});if(visible('#pMe'))renderMe()}
 setInterval(tick,15000);
 function followingOf(id){if(String(id).startsWith('o:'))return((ONL.follows[id.slice(2)]||{}).ids||[]).filter(k=>ent(k));if(SEED_P[id])return Object.keys(SEED_P).filter(k=>k!==id&&hh(id+k)%3===0);if(id===user.email)return Object.keys(S.follows).filter(k=>S.follows[k]&&ent(k));const st=store.get('tilt_u_'+id,null);return st?Object.keys(st.follows||{}).filter(k=>st.follows[k]&&ent(k)):[]}
 function followersOf(id){const out=[];if(ONL.on){const tid=id===user.email?ONL.me:id;Object.keys(ONL.follows).forEach(k=>{if(((ONL.follows[k]||{}).ids||[]).includes(tid))out.push('o:'+k)})}Object.keys(store.get('tilt_users',{})).forEach(e=>{const f=e===user.email?S.follows:((store.get('tilt_u_'+e,null)||{}).follows||{});if(f[id])out.push(e)});return out}
@@ -415,7 +424,7 @@ function boost(p){return{l:(p&&p.k==='blip'&&p.ts)?Math.floor(aiViews(p)*.005):0
 const fcount=id=>{const o=ovu(id);return o&&o.f!=null?o.f:followersOf(id).length+((SEED_P[id]||{}).fc||0)+gainFollowers(id)},gcount=id=>followingOf(id).length+((SEED_P[id]||{}).fg||0);
 function calcQ(text,m){let q=.18;if(m.video)q+=.2;if(m.img)q+=.1;if(m.h>=720)q+=.15;else if(m.h>=480)q+=.07;if(m.dur>=10&&m.dur<=30)q+=.1;if(text.length>=20)q+=.08;q+=Math.min(3,(text.match(/#\w+/g)||[]).length)*.05;q+=((hh(text+Date.now())%20)-10)/100;return Math.max(.05,Math.min(.95,q))}
 const viewed=new Set();
-const io2=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting||!S)return;const id=e.target.dataset.cid;if(!id||viewed.has(id))return;const p=ALL().find(x=>x.id===id);if(!p||p.by===user.email)return;viewed.add(id);setTimeout(()=>{const V=store.get('tilt_views',{});(V[id]=V[id]||{})[user.email]=1;store.set('tilt_views',V)},1500)}),{threshold:.6});
+const io2=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting||!S)return;const id=e.target.dataset.cid;if(!id||viewed.has(id))return;const p=ALL().find(x=>x.id===id);if(!p||p.by===user.email)return;viewed.add(id);setTimeout(()=>{const V=vwAll();(V[id]=V[id]||{})[user.email]=1;store.set('tilt_views',V)},1500)}),{threshold:.6});
 new MutationObserver(()=>$$('.clip[data-cid],.blip[data-cid]').forEach(c=>{if(!c._v){c._v=1;io2.observe(c)}})).observe(document.body,{childList:true,subtree:true});
 $('#nFile').onchange=e=>{const f=e.target.files[0];if(!f)return;
  if(f.type.startsWith('video')){if(f.size>6e7){toast('That video is over 60 MB.');e.target.value='';return}
@@ -489,7 +498,7 @@ function drawCm(){const p=ALL().find(x=>x.id===cmId),all=[...(S.comments[cmId]||
  const kids=id=>all.filter(x=>x.re===id).sort((a,b)=>(a.ts||0)-(b.ts||0)),row=(x,d)=>`<div class="cm" style="margin-left:${d*1.2}rem"><b>@${esc(x.u)}</b>${esc(x.t)}${x.ts?` <small style="color:var(--mute)">${ago(x.ts)}</small>`:''}<div><button class="lnk rp" data-rp="${esc(x.id)}" data-ru="${esc(x.u)}">Reply</button></div></div>`,walk=(x,d)=>row(x,d)+kids(x.id).map(k=>walk(k,Math.min(d+1,3))).join('');
  const top=all.filter(x=>!x.re).sort((a,b)=>(a.ts||0)-(b.ts||0));$('#cmList').innerHTML=top.length?top.map(x=>walk(x,0)).join(''):'<p class="empty">No comments yet. Start the conversation.</p>'}
 function setOnSt(){const dot=$('#onDot');if(dot)dot.classList.toggle('hide',!ONL.on);const e=$('#onSt');if(!e)return;e.textContent=ONL.on?'Connected. Friends who open this page can find you in Search.':(window.claude&&window.claude.use?'Not connected. Make sure you are signed in to claude.ai and have access to this page.':'Offline copy. Open Tilt from its claude.ai link to go online.')}
-function refreshOnline(){clearTimeout(ONL.t);ONL.t=setTimeout(()=>{if(!S)return;render();if(curT&&visible('#pMsg'))renderThread()},500)}
+function refreshOnline(){_ac=null;clearTimeout(ONL.t);ONL.t=setTimeout(()=>{if(!S)return;render();if(curT&&visible('#pMsg'))renderThread()},500)}
 function rebuildDm(){const m={},add=(r,x)=>(m[r]=m[r]||[]).push(x);Object.keys(ONL.dmDocs).forEach(sid=>{const to=(ONL.dmDocs[sid]||{}).to||{};if(sid===ONL.uid){Object.keys(to).forEach(r=>(to[r]||[]).forEach(x=>add('o:'+r,{f:user.email,t:x.t,ts:x.ts})))}else if(to[ONL.uid])to[ONL.uid].forEach(x=>add('o:'+sid,{f:'o:'+sid,t:x.t,ts:x.ts}))});ONL.dm=m}
 function pubProfile(){if(!ONL.on)return;const av=S.profile.avatar&&S.profile.avatar.length<60000?S.profile.avatar:'';ONL.db.doc('profiles/'+ONL.uid).set({n:S.profile.name,b:S.profile.bio||'',av,ts:Date.now(),sc:myScores(),hl:S.set.hideLists?1:0}).catch(()=>{})}
 function pubFollows(){if(!ONL.on)return;ONL.db.doc('follows/'+ONL.uid).set({ids:Object.keys(S.follows).filter(k=>S.follows[k]&&k.startsWith('o:'))}).catch(()=>{})}
@@ -572,7 +581,7 @@ function ovp(p){return((ONL.ov||{}).posts||{})[p.id]}
 const ovu=id=>((ONL.ov||{}).users||{})[id===(user&&user.email)?FB.uid:String(id).replace(/^o:/,'')];
 const likes=p=>{const o=ovp(p);return o&&o.l!=null?o.l+(S.likes[p.id]?1:0):likes0(p)};
 const views=p=>{const o=ovp(p);return o&&o.v!=null?o.v:views0(p)};
-function ovSet(kind,key,val){ONL.ov=ONL.ov||{};const m=(ONL.ov[kind]=ONL.ov[kind]||{});if(val==null)delete m[key];else m[key]=val;render()}
+function ovSet(kind,key,val){_ac=null;ONL.ov=ONL.ov||{};const m=(ONL.ov[kind]=ONL.ov[kind]||{});if(val==null)delete m[key];else m[key]=val;render()}
 /* admin panel */
 let admTab='users',setCtx=null;
 const num=v=>{const m=String(v).trim().toLowerCase().replace(/,/g,'').match(/^([0-9]*\.?[0-9]+)\s*([kmb])?/);if(!m)return 0;return Math.max(0,Math.min(2e9,Math.floor(Number(m[1])*({k:1e3,m:1e6,b:1e9}[m[2]]||1))))};
@@ -600,9 +609,9 @@ function openUserSet(uid){if(!isAdmin())return;const key=String(uid).replace(/^o
 $('#sSave').onclick=async()=>{if(!setCtx||!isAdmin())return;const v={};setCtx.fields.forEach(f=>v[f.k]=num($('#sf_'+f.k).value));try{await setCtx.onSave(v);toast('Saved');$('#dSet').close()}catch(e){toast('Could not save: '+e.message,9000)}};
 $('#sBoost').onclick=async()=>{try{await setCtx.onBoost();toast('Boosted');$('#dSet').close()}catch(e){toast('Could not save: '+e.message,9000)}};
 $('#sReset').onclick=async()=>{try{await setCtx.onReset();toast('Reset');$('#dSet').close()}catch(e){toast('Could not reset: '+e.message,9000)}};
-const VER='1.0.8';
+const VER='1.0.9';
 const APP_VER=(window.tilt&&window.tilt.version)||VER;
-function whatsNew(){if(store.get('tilt_ver','')===APP_VER)return;store.set('tilt_ver',APP_VER);setTimeout(()=>toast('Tilt '+APP_VER+': pick your clip thumbnail, 5 new games, follower lists are public unless hidden',5000),2500)}
+function whatsNew(){if(store.get('tilt_ver','')===APP_VER)return;store.set('tilt_ver',APP_VER);setTimeout(()=>toast('Tilt '+APP_VER+': faster search, a new Games hub with daily challenges, and messaging to online friends fixed',5000),2500)}
 document.addEventListener('keydown',e=>{if(!S||e.ctrlKey||e.metaKey||e.altKey)return;const t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;if(document.querySelector('dialog[open]'))return;const m={'1':'pHome','2':'pSearch','3':'pBlips','4':'pGames','5':'pMsg','6':'pMe'}[e.key];if(m){go(m);return}if(e.key==='/'){e.preventDefault();go('pSearch');$('#q').focus()}});
 async function diagnose(){if(!CFG||!FB.tok)return alert('Not signed in online.');const out=['Signed in as: '+FB.email,'UID: '+FB.uid,'Database: '+CFG.dbUrl,'Admin email in app: '+ADMIN_EMAIL,''];
  const t=async(label,fn)=>{try{await fn();out.push('OK    '+label)}catch(e){out.push('FAIL  '+label+' -> '+e.message)}};
@@ -659,7 +668,7 @@ function react(A){const best=()=>store.get(BEST.react,0);let st='idle',t0=0;
   else if(st==='wait'){clearTimeout(gTimer);reset('Start');msg('Too soon. Wait for green.')}
   else{const ms=Date.now()-t0;reset('Again');msg(ms+' ms');recordBest('react',ms);$('#rb').textContent=best()+' ms'}}}
 /* admin: richer tools */
-function ovSet(kind,key,val){ONL.ov=ONL.ov||{};const m=(ONL.ov[kind]=ONL.ov[kind]||{});if(val==null)delete m[key];else m[key]=val;render();if($('#dAdm').open)renderAdm()}
+function ovSet(kind,key,val){_ac=null;ONL.ov=ONL.ov||{};const m=(ONL.ov[kind]=ONL.ov[kind]||{});if(val==null)delete m[key];else m[key]=val;render();if($('#dAdm').open)renderAdm()}
 function showMsgs(){if(!S||!FB.uid)return;const m=((ONL.ov||{}).msgs||{})[FB.uid];if(!m)return;const seen=S.msgSeen||0,list=Object.values(m).filter(x=>x.ts>seen).sort((a,b)=>a.ts-b.ts);if(!list.length)return;const n=notes(),L=(n[user.email]=n[user.email]||[]);list.forEach(x=>L.unshift({t:'✉ '+String(x.t).slice(0,100),ts:x.ts,r:0,by:'Tilt Team'}));n[user.email]=L.slice(0,50);store.set('tilt_notes',n);S.msgSeen=list[list.length-1].ts;save();badge();toast('Message from Tilt Team: '+String(list[list.length-1].t).slice(0,60),5000)}
 async function toggleBadge(uid){if(!isAdmin())return;const key=String(uid).replace(/^o:/,''),has=((ONL.ov||{}).badges||{})[key];try{if(has)await fbDel('ov/badges/'+key);else await fbPut('ov/badges/'+key,true);ovSet('badges',key,has?null:true);toast(has?'Badge removed':'Badge given')}catch(e){toast('Failed: '+e.message,9000)}}
 function openSet(title,fields,onSave,onBoost,onReset,extra){setCtx={fields,onSave,onBoost,onReset};$('#sTitle').textContent=title;$('#sFields').innerHTML=fields.map(f=>`<label for="sf_${f.k}">${f.label}</label><input type="text" id="sf_${f.k}" value="${f.v}" autocomplete="off">`).join('');$('#sExtra').innerHTML=extra||'';$('#sBoost').classList.toggle('hide',!onBoost);$('#sReset').classList.toggle('hide',!onReset);$('#dSet').showModal();setTimeout(()=>{const f=$('#sf_'+fields[0].k);if(f)f.focus()},60)}
@@ -841,6 +850,19 @@ function dodge(A){A.innerHTML=`<h3>Dodge <small id="ds" style="font-family:Figtr
  c.onpointerdown=e=>{e.preventDefault();if(!alive)start();move(e)};c.onpointermove=e=>{if(alive&&(e.buttons||e.pointerType==='touch'))move(e)};
  document.onkeydown=e=>{if(e.key==='ArrowLeft')keys.l=true;if(e.key==='ArrowRight')keys.r=true;if(!alive&&(e.key==='ArrowLeft'||e.key==='ArrowRight'))start()};document.onkeyup=e=>{if(e.key==='ArrowLeft')keys.l=false;if(e.key==='ArrowRight')keys.r=false};
  draw('Tap to start')}
+
+/* ===== 1.0.9 performance ===== */
+var _ac=null,_at=0,_vw=null,SRL=30,_trend=null,_trendT=0,_gAll=[],_gLast=GEN0-1;
+function ALL(){const n=Date.now();if(_ac&&n-_at<1500)return _ac;_at=n;return _ac=ALL0()}
+const vwAll=()=>_vw||(_vw=store.get('tilt_views',{}));
+const realViews=id=>{const o=vwAll()[id];return o?Object.keys(o).length:0};
+const sortDesc=(arr,f)=>arr.map(x=>[f(x),x]).sort((a,b)=>b[0]-a[0]).map(x=>x[1]);
+const sortBy=(mode,want,f,rank)=>{if(mode!==want)return rank;const c=new Map(),k=x=>{let v=c.get(x);if(v===undefined){v=f(x);c.set(x,v)}return v};return(a,b)=>k(b)-k(a)};
+const topN=(arr,f,n)=>{const out=[];for(const x of arr){const v=f(x);if(out.length<n||v>out[out.length-1][0]){out.push([v,x]);out.sort((a,b)=>b[0]-a[0]);if(out.length>n)out.pop()}}return out.map(o=>o[1])};
+/* AI posts are now generated once, then only new ones are added */
+function genOne(k){const ids=Object.keys(SEED_P),tg=['#flap','#snake','#memory','#gaming','#lofi','#speedrun','#puzzle'],h=hh('g'+k),by=ids[h%ids.length],clip=h%5<2,tag=tg[(h>>3)%tg.length],base={id:'g'+k,by,n:hh('n'+k)%24,ts:k*SLOT+(h%SLOT),q:.1+(hh('q'+k)%86)/100};
+ return clip?{...base,k:'clip',t:pk(by,'clip',h)+' '+tag,tag:tag.slice(1),dur:8+(h>>7)%22}:{...base,k:'blip',t:pk(by,'blip',h)+(h%3===0?' '+tag:''),pic:(h>>11)%3===0?1:0,l:0,...((h>>9)%8===0?{poll:['Snake','Flap','Memory'].slice(0,2+(h%2))}:{})}}
+function genPosts(){const s=Math.floor(Date.now()/SLOT);for(let k=_gLast+1;k<=s;k++)_gAll.push(genOne(k));_gLast=s;return _gAll}
 /* search */
 $('#sChips').onclick=e=>{const b=e.target.closest('button');if(!b)return;sM=b.dataset.m;$$('#sChips button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderSearch()};
 $('#q').oninput=renderSearch;
@@ -871,7 +893,7 @@ $('#mGo').onclick=send;$('#mIn').onkeydown=e=>{if(e.key==='Enter')send()};
 const PG=['pHome','pSearch','pBlips','pGames','pMsg','pMe','pSet'];
 function go(id){stopG();$$('dialog[open]').forEach(d=>d.close());PG.forEach(p=>$('#'+p).classList.toggle('hide',p!==id));
  $$('nav.bottom button').forEach(b=>b.dataset.p===id?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'));
- if(id==='pSearch')renderSearch();if(id==='pHome'||id==='pBlips')render();if(id==='pMsg'){if(curT)renderThread();else renderInbox()}window.scrollTo(0,0)}
+ if(id==='pSearch')renderSearch();if(id==='pGames')showHub();if(id==='pHome'||id==='pBlips')render();if(id==='pMsg'){if(curT)renderThread();else renderInbox()}window.scrollTo(0,0)}
 $('nav.bottom').onclick=e=>{const b=e.target.closest('button');if(b)go(b.dataset.p)};$('#gear').onclick=()=>go('pSet');$('#home').onclick=()=>go('pHome');
 /* profile edit + settings */
 function openEdit(){tmpA=S.profile.avatar;tmpB=S.profile.banner;$('#eName').value=S.profile.name;$('#eBio').value=S.profile.bio;setEB();$('#dEdit').showModal()}
@@ -913,7 +935,7 @@ function flap(A){A.innerHTML='<h3>Flap <small id="fs" style="font-family:Figtree
   x.fillStyle='#FFD84D';x.beginPath();x.arc(50,y,10,0,7);x.fill();x.fillStyle='#1B1340';x.beginPath();x.arc(54,y-3,2,0,7);x.fill();
   if(!alive){x.fillStyle='rgba(0,0,0,.45)';x.fillRect(0,0,280,360);x.fillStyle='#fff';x.font='700 20px sans-serif';x.textAlign='center';x.fillText(t?'Game over. Tap to retry':'Tap to start',140,180)}}
  function tick(){t++;v+=.32;y+=v;if(t%90===1)pipes.push({x:280,g:70+Math.random()*140});pipes.forEach(p=>{p.x-=2;if(!p.s&&p.x+34<42){p.s=1;sc++;$('#fs').textContent='Score '+sc+' · Best '+Math.max(sc,store.get('tilt_flap',0))}});pipes=pipes.filter(p=>p.x>-40);
-  if(y<0||y>360||pipes.some(p=>p.x<60&&p.x+34>40&&(y-10<p.g||y+10>p.g+95))){alive=false;clearInterval(gTimer);gTimer=null;store.set('tilt_flap',Math.max(sc,store.get('tilt_flap',0)))}draw()}
+  if(y<0||y>360||pipes.some(p=>p.x<60&&p.x+34>40&&(y-10<p.g||y+10>p.g+95))){alive=false;clearInterval(gTimer);gTimer=null;if(sc>0)recordBest('flap',sc)}draw()}
  function up(){if(!alive){y=170;v=0;pipes=[];sc=0;t=0;alive=true;clearInterval(gTimer);gTimer=setInterval(tick,16)}v=-5.2}
  c.onpointerdown=e=>{e.preventDefault();up()};document.onkeydown=e=>{if(e.code==='Space'){e.preventDefault();up()}};draw()}
 function memory(A){const E=['🍉','🎮','🚀','🎧','🌈','🍕','🐙','🎯'];let d=[...E,...E].sort(()=>Math.random()-.5),open=[],lock=false,pairs=0,mv=0;
@@ -922,8 +944,69 @@ function memory(A){const E=['🍉','🎮','🚀','🎧','🌈','🍕','🐙','�
   if(open.length===2){mv++;$('#mv').textContent='Moves '+mv;const[p,q]=open;if(p.textContent===q.textContent){p.className=q.className='ok';open=[];if(++pairs===8)recordBest('memory',mv)}else{lock=true;setTimeout(()=>{p.textContent=q.textContent='';p.className=q.className='';open=[];lock=false},700)}}};g.appendChild(b)});
  $('#again').onclick=()=>memory(A)}
 function tap(A){A.innerHTML=`<h3>Tap Rush</h3><p style="color:var(--mute)">Best: <b id="best">${store.get('tilt_tap',0)}</b>. Hit start, then tap as fast as you can.</p><button class="tap" id="tp">Start</button><p style="text-align:center" id="tt">10.0s</p>`;
- let n=0,t=0,run=false;$('#tp').onclick=()=>{if(!run){run=true;n=1;t=100;$('#tp').textContent='1';gTimer=setInterval(()=>{t--;$('#tt').textContent=(t/10).toFixed(1)+'s';if(t<=0){clearInterval(gTimer);run=false;$('#tp').textContent='Again';const b=Math.max(n,store.get('tilt_tap',0));store.set('tilt_tap',b);$('#best').textContent=b;toast('You tapped '+n+' times')}},100)}else{n++;$('#tp').textContent=n}}}
+ let n=0,t=0,run=false;$('#tp').onclick=()=>{if(!run){run=true;n=1;t=100;$('#tp').textContent='1';gTimer=setInterval(()=>{t--;$('#tt').textContent=(t/10).toFixed(1)+'s';if(t<=0){clearInterval(gTimer);run=false;$('#tp').textContent='Again';recordBest('tap',n);$('#best').textContent=store.get('tilt_tap',0);toast('You tapped '+n+' times')}},100)}else{n++;$('#tp').textContent=n}}}
 /* boot */
+
+/* ===== 1.0.9: overrides that must come after the original search and messages code ===== */
+/* search: debounce, cache the trending part, never draw thousands of results */
+function trendHTML(){const n=Date.now();if(_trend&&n-_trendT<30000)return _trend;const A=ALL(),tc={};A.forEach(p=>{const m=String(p.t).match(/(^|\s)#\w+/g);if(m)m.forEach(x=>{x=x.trim().toLowerCase();tc[x]=(tc[x]||0)+1})});
+ const tg=Object.keys(tc).sort((a,b)=>tc[b]-tc[a]).slice(0,8),cl=A.filter(p=>p.k==='clip');_trendT=n;
+ return _trend=(tg.length?'<h3 style="margin:.4rem 0 .6rem">Trending tags</h3><div class="chips">'+tg.map(x=>`<button data-a="tag" data-t="${esc(x.slice(1))}" aria-pressed="false">${esc(x)}</button>`).join('')+'</div>':'')+'<h3 style="margin:.4rem 0 .6rem">Trending clips</h3><div class="gr">'+topN(cl,views,6).map(th).join('')+'</div>'}
+const gameRow=g=>`<button class="gcard glass" data-a="game" data-g="${g}"><span class="ic">${GAMES[g].i}</span><div><b>${GAMES[g].n}</b><br><small>${GAMES[g].d}</small></div></button>`;
+const moreBtn=n=>n>SRL?'<p style="text-align:center"><button class="btn ghost" data-a="more" data-w="s">Show more</button></p>':'';
+function renderSearch(){const q=$('#q').value.trim().toLowerCase(),M=sM,ok=m=>M==='all'||M===m,A=ALL();let h='';
+ if(!q&&M!=='all'){
+  if(M==='clips'){const l=A.filter(p=>p.k==='clip').sort((a,b)=>b.ts-a.ts);h='<div class="gr">'+l.slice(0,SRL).map(th).join('')+'</div>'+moreBtn(l.length)}
+  else if(M==='people'){const l=people();h=l.slice(0,SRL).map(prow).join('')+moreBtn(l.length)}
+  else if(M==='blips'){const l=A.filter(p=>p.k==='blip').sort((a,b)=>b.ts-a.ts);h=l.slice(0,SRL).map(blipHTML).join('')+moreBtn(l.length)}
+  else h=Object.keys(GAMES).map(gameRow).join('')}
+ else if(!q){h=trendHTML()+'<h3 style="margin:1.2rem 0 .6rem">People to follow</h3>'+(people().filter(u=>!fol(u.id)).slice(0,8).map(prow).join('')||'<p class="empty">You follow everyone.</p>')}
+ else{const m=s=>String(s).toLowerCase().includes(q),tg=q[0]==='#'&&q.length>1,hs=t=>new RegExp('(^|\\s)'+q.replace(/[^#\w]/g,'')+'(?!\\w)','i').test(t),hd=p=>{const e=ent(p.by);return e?e.h:''};
+  const c=ok('clips')?A.filter(p=>p.k==='clip'&&(tg?hs(p.t):m(p.t+' '+(p.tag||'')+' '+hd(p)))):[],pe=ok('people')&&!tg?people().filter(u=>m(u.h+' '+u.bio)):[],bl=ok('blips')?A.filter(p=>p.k==='blip'&&(tg?hs(p.t):m(p.t))):[],gm=ok('games')&&!tg?Object.keys(GAMES).filter(g=>m(GAMES[g].n+' '+GAMES[g].d)):[];
+  if(c.length)h+='<h3 style="margin:.4rem 0 .6rem">Clips</h3><div class="gr">'+c.slice(0,SRL).map(th).join('')+'</div>'+moreBtn(c.length);
+  if(pe.length)h+='<h3 style="margin:1.2rem 0 .6rem">People</h3>'+pe.slice(0,SRL).map(prow).join('')+moreBtn(pe.length);
+  if(bl.length)h+='<h3 style="margin:1.2rem 0 .6rem">Blips</h3>'+bl.sort((a,b)=>b.ts-a.ts).slice(0,SRL).map(blipHTML).join('')+moreBtn(bl.length);
+  if(gm.length)h+='<h3 style="margin:1.2rem 0 .6rem">Games</h3>'+gm.map(gameRow).join('');
+  if(!h)h='<p class="empty">No results for “'+esc($('#q').value.trim())+'”.</p>'}
+ $('#sres').innerHTML=h}
+let _qd=0;$('#q').oninput=()=>{clearTimeout(_qd);_qd=setTimeout(()=>{SRL=30;renderSearch()},160)};
+$('#sChips').onclick=e=>{const b=e.target.closest('button');if(!b)return;sM=b.dataset.m;SRL=30;$$('#sChips button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderSearch()};
+
+function send(){const t=$('#mIn').value.trim();if(!t||!curT)return;if(curT.startsWith('o:')){if(!ONL.on)return toast('You are offline');sendOnline(curT.slice(2),t);$('#mIn').value='';return}const d=store.get('tilt_dm',{}),k=dkey(curT);(d[k]=d[k]||[]).push({f:user.email,t,ts:Date.now()});store.set('tilt_dm',d);notify(curT,'sent you a message');$('#mIn').value='';renderThread()}
+
+/* ===== 1.0.9: Games hub ===== */
+const CAT={snake:'arcade',flap:'arcade',dodge:'arcade',whack:'reflex',tap:'reflex',react:'reflex',simon:'puzzle',memory:'puzzle',g2048:'puzzle',mines:'puzzle',ttt:'board',c4:'board',rookery:'board'};
+const NEWG=new Set(['c4','mines','simon','whack','dodge']),WIN=new Set(['ttt','c4']);
+const HELP={snake:'Swipe or use the arrow keys. Eat the dots and do not hit yourself.',flap:'Tap or press Space to flap through the gaps.',memory:'Flip two cards at a time and find all 8 pairs in as few moves as you can.',tap:'Press Start, then tap as fast as you can for 10 seconds.',g2048:'Slide tiles with the arrows or swipes. Equal tiles merge.',ttt:'You are X. Get three in a row before the computer does.',react:'Wait for the button to turn green, then tap right away.',c4:'Drop red discs into columns. Connect four before the computer does.',mines:'Tap to reveal, use Flag mode to mark mines. Clear the board fast.',simon:'Watch the pattern, then repeat it. It grows every round.',whack:'Tap the mole each time it pops up. You have 30 seconds.',dodge:'Drag or use the arrow keys to avoid the falling blocks.',rookery:'Chess against bots, with game modes, coins and skins.'};
+var gCat='all',gQuery='';
+const todayStr=d=>{d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const xp=n=>store.set('tilt_xp',store.get('tilt_xp',0)+n),levelOf=x=>1+Math.floor(Math.sqrt(x/40));
+function dailyGame(){const ids=Object.keys(GAMES).filter(g=>!GAMES[g].ext&&GR[g]),g=ids[hh('daily'+todayStr())%ids.length],[lo,hi]=GR[g],asc=ASC.has(g);return{g,asc,t:WIN.has(g)?1:asc?Math.round(hi-(hi-lo)*.3):Math.round(lo+(hi-lo)*.3)}}
+const dailyText=d=>WIN.has(d.g)?'Win a game':d.asc?'Finish in '+d.t+(UNIT[d.g]||'')+' or less':'Score '+d.t+(UNIT[d.g]||'')+' or more';
+function dailyCheck(g,v){const d=dailyGame();if(g!==d.g)return;const day=todayStr();if(store.get('tilt_dd_'+day,0))return;if(!(WIN.has(g)||(d.asc?v<=d.t:v>=d.t)))return;store.set('tilt_dd_'+day,1);const y=new Date();y.setDate(y.getDate()-1);const st=store.get('tilt_streak',{last:'',n:0});st.n=st.last===todayStr(y)?st.n+1:1;st.last=day;store.set('tilt_streak',st);xp(50);toast('Daily challenge complete! 🔥 '+st.n+'-day streak',5000)}
+function recordBest(g,v){const asc=ASC.has(g);if(!asc&&!(v>0))return;const k=BEST[g],cur=store.get(k,0);if(!cur||(asc?v<cur:v>cur)){store.set(k,v);toast('New best in '+GAMES[g].n+': '+v+(UNIT[g]||''))}xp(15);dailyCheck(g,v)}
+const bestText=g=>{const v=store.get(BEST[g],0);return !v?'No score yet':WIN.has(g)?'Wins '+v:'Best '+v+(UNIT[g]||'')};
+function achievements(){const pl=store.get('tilt_plays',{}),total=Object.values(pl).reduce((a,b)=>a+b,0),tried=Object.keys(pl).length,bests=Object.keys(BEST).filter(g=>store.get(BEST[g],0)>0).length,st=store.get('tilt_streak',{n:0}),B=g=>store.get(BEST[g],0);
+ return[['🎮','Play your first game',total>=1],['🔥','Play 25 games',total>=25],['🧭','Try 6 different games',tried>=6],['🏆','Set a best in 5 games',bests>=5],['📅','Reach a 3-day streak',(st.n||0)>=3],['🧠','Puzzle master: a best in 2048, Minesweeper, Memory and Simon',['g2048','mines','memory','simon'].every(g=>B(g)>0)],['⚡','Fast fingers: react in 250 ms or less',B('react')>0&&B('react')<=250],['🐍','Snake charmer: score 25',B('snake')>=25],['🥇','Win 3 times in Tic Tac Toe or Connect Four',B('ttt')>=3||B('c4')>=3],['♟️','Join the chess club',(pl.rookery||0)>=1]]}
+function buildHub(){const xpv=store.get('tilt_xp',0),lv=levelOf(xpv),lo=40*(lv-1)*(lv-1),hi=40*lv*lv,pct=Math.round((xpv-lo)/(hi-lo)*100),st=store.get('tilt_streak',{last:'',n:0}),d=dailyGame(),done=!!store.get('tilt_dd_'+todayStr(),0),rc=store.get('tilt_recent',[]).filter(g=>GAMES[g]),ach=achievements(),got=ach.filter(a=>a[2]).length;
+ $('#gHub').innerHTML=`<h2 style="margin-bottom:.5rem">Games</h2>
+ <div class="glass" style="padding:.9rem"><div style="display:flex;justify-content:space-between;align-items:center"><b>Level ${lv}</b><small style="color:var(--mute)">${xpv} XP${st.n?' · 🔥 '+st.n+'-day streak':''}</small></div><div class="xp"><i style="width:${Math.max(3,pct)}%"></i></div></div>
+ <div class="glass dly"><span style="font-size:2.2rem">${GAMES[d.g].i}</span><div style="flex:1"><b>Daily challenge: ${esc(GAMES[d.g].n)}</b><br><small style="color:var(--mute)">${esc(dailyText(d))} · +50 XP</small></div>${done?'<b style="color:#2fbf71">✓ Done</b>':`<button class="btn sm pink" data-g="${d.g}">Play</button>`}</div>
+ <div style="display:flex;gap:.45rem;flex-wrap:wrap;margin:.2rem 0 .8rem;align-items:center">${ach.map(a=>`<span class="bdg ${a[2]?'':'off'}" title="${esc(a[1])}${a[2]?'':' (locked)'}">${a[0]}</span>`).join('')}<small style="color:var(--mute)">${got}/${ach.length}</small></div>
+ ${rc.length?`<div style="margin-bottom:.6rem"><small style="color:var(--mute)">Recently played</small><div class="chips" style="margin:.3rem 0 0">${rc.map(g=>`<button data-g="${g}" aria-pressed="false">${GAMES[g].i} ${esc(GAMES[g].n)}</button>`).join('')}</div></div>`:''}
+ <input type="search" id="gQ" placeholder="Search games" aria-label="Search games" value="${esc(gQuery)}" style="margin-bottom:.6rem">
+ <div class="chips" id="gCats">${['all','arcade','puzzle','board','reflex'].map(c=>`<button data-c="${c}" aria-pressed="${gCat===c}">${c==='all'?'All':c[0].toUpperCase()+c.slice(1)}</button>`).join('')}</div>
+ <div class="ggrid" id="gGrid"></div>`;drawGrid()}
+function drawGrid(){const q=gQuery.toLowerCase(),ids=Object.keys(GAMES).filter(g=>(gCat==='all'||CAT[g]===gCat)&&(!q||(GAMES[g].n+' '+GAMES[g].d).toLowerCase().includes(q)));
+ $('#gGrid').innerHTML=ids.map(g=>`<button class="gt glass" data-g="${g}">${NEWG.has(g)?'<span class="nw">NEW</span>':''}<span class="ic">${GAMES[g].i}</span><b>${esc(GAMES[g].n)}</b><small>${esc(GAMES[g].d)}</small><small style="color:var(--pink);font-weight:700">${GAMES[g].ext?'Chess':esc(bestText(g))}</small></button>`).join('')||'<p class="empty" style="grid-column:1/3">No games match.</p>'}
+function showHub(){stopG();curG=null;$('#gPlay').classList.add('hide');$('#gHub').classList.remove('hide');buildHub()}
+function buildGames(){buildHub()}
+function startGame(g){if(!GAMES[g])return;const pl=store.get('tilt_plays',{});pl[g]=(pl[g]||0)+1;store.set('tilt_plays',pl);xp(10);const rc=store.get('tilt_recent',[]).filter(x=>x!==g);rc.unshift(g);store.set('tilt_recent',rc.slice(0,4));
+ if(GAMES[g].ext){GAMES[g].f();return}
+ stopG();$('#gHub').classList.add('hide');$('#gPlay').classList.remove('hide');$('#gTitle').textContent=GAMES[g].i+' '+GAMES[g].n;$('#gHelp').textContent=HELP[g]||'';const A=$('#gameArea');A.classList.remove('hide');GAMES[g].f(A);curG=g;$('#gFoot').classList.remove('hide');window.scrollTo(0,0)}
+$('#gHub').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(b){startGame(b.dataset.g);return}const c=e.target.closest('#gCats button');if(c){gCat=c.dataset.c;$$('#gCats button').forEach(x=>x.setAttribute('aria-pressed',x===c));drawGrid()}});
+$('#gHub').addEventListener('input',e=>{if(e.target.id==='gQ'){gQuery=e.target.value;drawGrid()}});
+$('#gBack').onclick=showHub;
 setInterval(()=>{if(user&&S)badge()},4000);const s0=store.get('tilt_session',null);if(s0){user=s0;if(CFG){fbRefresh().then(fbLookup).then(()=>enter()).catch(e=>{if(e instanceof TypeError)enter();else{store.set('tilt_session',null);user=null;fillIcons();introStep(0)}})}else enter()}else{fillIcons();introStep(0)}
 </script>
 </body>

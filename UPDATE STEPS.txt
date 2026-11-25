@@ -1,11 +1,10 @@
-TILT UPDATE 1.0.8  (pick your clip thumbnail, 5 new games, follower lists public unless hidden)
+TILT UPDATE 1.0.9  (fast search, new Games hub, messages to online friends fixed)
 
-No new Firebase rules this time. (Your rules must already include the "media" block from update 1.0.7.
-If you skipped that, paste database.rules.json from the 1.0.7 zip into Firebase > Realtime Database > Rules > Publish.)
+No Firebase changes needed.
 
 1. github.com > your tilt repository > Add file > Upload files.
    Drag in index.html and package.json from this folder. Click Commit changes.
-2. Releases > Draft a new release > Choose a tag > type v1.0.8 > Create new tag > Publish release.
+2. Releases > Draft a new release > Choose a tag > type v1.0.9 > Create new tag > Publish release.
 3. Actions tab: wait for "Build Tilt" to turn green (about 10 minutes).
-4. Releases > v1.0.8 > Tilt-Setup-1.0.8.exe (or reopen Tilt to self-update).
-5. Admin shield > Announce > "Announce update to v1.0.8".
+4. Releases > v1.0.9 > Tilt-Setup-1.0.9.exe (or reopen Tilt to self-update).
+5. Admin shield > Announce > "Announce update to v1.0.9".
