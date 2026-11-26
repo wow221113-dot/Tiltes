@@ -1,0 +1,50 @@
+ANTIVIRUS WARNINGS AND DOWNLOAD PROBLEMS
+========================================
+
+WHAT YOU SAW
+  A scanner reported something like "Riskware" or "ProcessHacker" on the Tilt installer.
+  Tilt does not contain or use Process Hacker. I cannot see the scanner's report, so I
+  cannot promise what it matched, but this exact kind of warning is very common on
+  brand-new, unsigned desktop apps built with Electron, because scanners guess based on
+  how the program is packaged. It is usually called a false positive.
+
+HOW TO CHECK IT YOURSELF (5 minutes)
+  1. Go to virustotal.com > Choose file > upload the Tilt .exe (or paste the download link).
+  2. Look at how many of the ~70 scanners flag it. One to three generic names
+     ("Riskware", "Generic", "Heur") from small vendors is the normal false-positive pattern.
+     If big names such as Microsoft, Kaspersky or ESET flag a specific named virus,
+     do not run it and tell me.
+  3. The file is built by GitHub, from your own repository, not on anyone's computer.
+     Open your repository > Actions > the Build Tilt run. The log shows every step. The
+     installer contains the Electron runtime plus the files in your repository, nothing else.
+
+REPORT THE FALSE POSITIVE
+  Every antivirus company has a free page to submit a file as a false positive:
+  Microsoft: microsoft.com/wdsi/filesubmission   (choose "Software developer")
+  Search "false positive submission" plus the name of the scanner that flagged it.
+  They usually clear it within a few days, and it helps every user.
+
+THE EASIEST OPTION FOR FRIENDS: NO DOWNLOAD AT ALL
+  Turn on the web version (see UPDATE STEPS.txt) and send them the link.
+  In Chrome or Edge they click the install icon in the address bar (or Settings >
+  Install in Tilt) and Tilt gets its own desktop icon and window. There is no .exe,
+  so there is nothing for antivirus to flag.
+
+IF A FRIEND MUST USE THE DESKTOP APP
+  Each release now has three downloads:
+    Tilt-Setup-<version>.exe       the normal installer
+    Tilt-Portable-<version>.exe    runs without installing
+    Tilt-<version>-win.zip         unzip and run Tilt.exe (no installer)
+  Browser warning ("not commonly downloaded"):
+    Edge:   click ... next to the download > Keep > Show more > Keep anyway
+    Chrome: click the arrow next to the download > Keep
+  Windows warning ("Windows protected your PC"): More info > Run anyway
+  Antivirus quarantined it: restore it from quarantine and add an exception for Tilt,
+  but only after the VirusTotal check above looks like a false positive.
+
+THE REAL FIX: CODE SIGNING
+  The warnings only fully go away when the app is signed with a code-signing certificate
+  tied to a verified publisher. That costs money from a paid signing service, or you can
+  apply to SignPath Foundation, which signs open-source projects for free if they qualify
+  (public repository with an open-source license). I cannot set this up for you, because
+  it needs your identity and an account.

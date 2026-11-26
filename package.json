@@ -1,6 +1,6 @@
 {
   "name": "tilt",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Tilt: clips, blips and games",
   "main": "main.js",
   "author": "Tilt",
@@ -26,14 +26,33 @@
       "build/**"
     ],
     "win": {
-      "target": "nsis",
-      "icon": "build/icon.ico",
-      "artifactName": "Tilt-Setup-${version}.${ext}"
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
     },
     "nsis": {
       "oneClick": true,
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
+      "createStartMenuShortcut": true,
+      "artifactName": "Tilt-Setup-${version}.${ext}"
     },
     "mac": {
       "target": "dmg",
@@ -42,6 +61,10 @@
     "linux": {
       "target": "AppImage",
       "icon": "build/icon.png"
+    },
+    "copyright": "Copyright \u00a9 2026 Tilt",
+    "portable": {
+      "artifactName": "Tilt-Portable-${version}.${ext}"
     }
   }
 }

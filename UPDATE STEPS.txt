@@ -1,10 +1,44 @@
-TILT UPDATE 1.0.9  (fast search, new Games hub, messages to online friends fixed)
+TILT UPDATE 1.0.10
+  - a new profile view for other people (stats, tabs, mutual follows, mute, share)
+  - Tilt can be installed from the browser (no .exe needed)
+  - names in comments and notifications open that person's profile
+  - extra download formats (portable exe and zip) for friends with antivirus trouble
 
 No Firebase changes needed.
 
-1. github.com > your tilt repository > Add file > Upload files.
-   Drag in index.html and package.json from this folder. Click Commit changes.
-2. Releases > Draft a new release > Choose a tag > type v1.0.9 > Create new tag > Publish release.
-3. Actions tab: wait for "Build Tilt" to turn green (about 10 minutes).
-4. Releases > v1.0.9 > Tilt-Setup-1.0.9.exe (or reopen Tilt to self-update).
-5. Admin shield > Announce > "Announce update to v1.0.9".
+STEP 1: GITHUB
+  github.com > your tilt repository > Add file > Upload files.
+  Drag in EVERYTHING in this folder except this text file and "ANTIVIRUS HELP.txt":
+    index.html, package.json, manifest.webmanifest, sw.js,
+    icon-192.png, icon-512.png, icon-maskable-512.png
+  Click Commit changes.
+
+STEP 2: TURN ON THE WEB VERSION (this is what your friend can use right now)
+  Your repository > Settings > Pages.
+  Under "Build and deployment", set Source to: Deploy from a branch.
+  Branch: main     Folder: / (root)     click Save.
+  (If you chose "GitHub Actions" there before, change it to Deploy from a branch.)
+  Wait 1 to 2 minutes and refresh. The address appears at the top:
+    https://YOURNAME.github.io/tilt/
+  Send that link to your friend. In Chrome or Edge they click the install icon in the
+  address bar, or open Tilt > Settings > Install.
+
+STEP 3: THE DESKTOP RELEASE
+  Releases > Draft a new release > Choose a tag > type v1.0.10 > Create new tag > Publish release.
+  Wait for Actions > Build Tilt to turn green (about 10 minutes).
+  The release now has three Windows downloads:
+    Tilt-Setup-1.0.10.exe, Tilt-Portable-1.0.10.exe, Tilt-1.0.10-win.zip
+
+STEP 4 (optional): let manual builds also save the zip
+  Open .github/workflows/build.yml > pencil icon > replace the last two lines
+    path: dist/*.exe
+  with
+    path: |
+      dist/*.exe
+      dist/*.zip
+  (the same text is in build.yml.txt). Commit.
+
+STEP 5: TELL EVERYONE
+  Admin shield > Announce > "Announce update to v1.0.10".
+
+Read "ANTIVIRUS HELP.txt" for the warning your scanner showed.
